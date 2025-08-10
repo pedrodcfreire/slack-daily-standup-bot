@@ -2,7 +2,6 @@ import { App } from '@slack/bolt';
 import * as dotenv from 'dotenv';
 import axios from 'axios';
 
-// Load environment variables
 dotenv.config();
 
 const app = new App({
@@ -14,33 +13,31 @@ const app = new App({
 
 let dailyResponses: any[] = [];
 
-// Schedule every minute for testing
 function scheduleDaily() {
-  const interval = 60000; // 1 minute = 60,000 milliseconds
+  const interval = 1000 * 60 * 60 * 24; // 24 hours
   
   setInterval(async () => {
-    console.log('⏰ Every minute - posting daily questions...');
-    dailyResponses = []; // Reset responses
+    console.log('⏰ Daily - posting questions...');
+    dailyResponses = [];
     await postDailyQuestions(process.env.CHANNEL_ID || '');
   }, interval);
   
-  console.log('📅 Questions will post every minute for testing');
+  console.log('📅 Questions will post every 24 hours');
 }
 
 async function generateAIReport(responses: any[]): Promise<string> {
   try {
     const responsesText = responses.map(r => `${r.user}: ${r.message}`).join('\n');
     
-    const prompt = `You are a team lead assistant. Analyze these daily standup responses and create a concise, actionable report.
+    const prompt = `You are a team lead assistant. Analyze these daily standup responses and create a concise, actionable report divided in 3 topics.
 
 Team Responses:
 ${responsesText}
 
 Please provide:
-1. Brief progress summary
-2. Today's focus areas
-3. Blockers that need attention
-4. Any recommendations for the team lead
+**1. Today's focus areas**
+**2. Yesterday's achievements**
+**3. Blockers that need attention and any recommendations for the team lead**
 
 Keep it professional but friendly, and highlight urgent items.`;
 
@@ -73,13 +70,12 @@ async function postDailyQuestions(channelId: string) {
   try {
     await app.client.chat.postMessage({
       channel: channelId,
-      text: "🌅 Good morning! Time for our daily standup!",
       blocks: [
         {
           type: "section",
           text: {
             type: "mrkdwn",
-            text: "*Daily Standup Questions:*\n\n1️⃣ What did you work on yesterday?\n2️⃣ What will you work on today?\n3️⃣ Any blockers or impediments?"
+            text: "🌅 Good morning! Hope you're having a great day. Time for our daily standup!\n\n*Daily Standup Questions:*\n\n1️⃣ What did you work on yesterday?\n2️⃣ What will you work on today?\n3️⃣ Any blockers?"
           }
         }
       ]
@@ -99,7 +95,7 @@ async function sendReportToLeader(report: string, leaderUserId: string) {
         {
           type: "section",
           text: {
-            type: "mrkdwn", 
+            type: "mrkdwn",
             text: report
           }
         }
@@ -127,7 +123,6 @@ app.message(async ({ message, say }) => {
           timestamp: new Date()
         });
         
-        // Generate AI report instead of basic concatenation
         const aiReport = await generateAIReport(dailyResponses);
         await sendReportToLeader(aiReport, process.env.LEADER_USER_ID || '');
         await say(`✅ Thanks ${userName}! AI-powered report sent to team leader.`);
@@ -142,12 +137,10 @@ app.message(async ({ message, say }) => {
   try {
     await app.start();
     console.log('⚡️ Bot running on port 3000 with AI integration!');
-    console.log('🌐 Ready for ngrok setup...');
+    console.log('🌐 Ready for deployment...');
     
-    // Set up daily scheduling (simple version)
     scheduleDaily();
     
-    // Post questions immediately for testing (remove this later)
     console.log('🧪 Posting test questions immediately...');
     await postDailyQuestions(process.env.CHANNEL_ID || '');
   } catch (error) {
