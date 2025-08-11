@@ -16,7 +16,6 @@ AI-powered Slack bot that automates daily standup meetings and generates intelli
 - npm package manager
 - Slack workspace with admin permissions
 - OpenAI API account with credits
-- ngrok (for local development)
 
 ## Installation
 
@@ -32,9 +31,7 @@ AI-powered Slack bot that automates daily standup meetings and generates intelli
    ```
 
 3. **Create environment file:**
-   ```bash
-   cp .env.example .env
-   ```
+   Create a `.env` file in the project root with the configuration variables shown below.
 
 4. **Configure environment variables** (see Configuration section below)
 
@@ -95,21 +92,12 @@ npm run dev
 npm start
 ```
 
-### With ngrok (for Slack webhooks)
-```bash
-# Terminal 1
-npm run dev
-
-# Terminal 2  
-ngrok http 3000
-```
-
 ## How It Works
 
-1. **Daily Scheduling**: Bot automatically posts standup questions at 9:00 AM every weekday
+1. **Daily Scheduling**: Bot automatically posts standup questions at 9:00 AM every day
 2. **Response Capture**: Monitors target channel for team member responses
 3. **AI Analysis**: Sends responses to OpenAI for intelligent summarization
-4. **Report Delivery**: Sends AI-generated report to team leader via DM
+4. **Report Delivery**: Sends AI-generated report to team leader via DM immediately (in production, this would be batched for end-of-day delivery)
 
 ## Architecture
 
@@ -121,7 +109,7 @@ ngrok http 3000
         ▲                       ▲                     ▲
         │               ┌───────────────┐             │
         └───────────────│   Scheduling  │─────────────┘
-                        │   (setTimeout) │
+                        │  (setTimeout) │
                         └───────────────┘
 ```
 
@@ -138,23 +126,34 @@ ngrok http 3000
 └── prompts.md          # AI prompts documentation
 ```
 
+## AI Report Format
+
+The bot generates structured reports with three main sections:
+
+- **Today's Focus Areas**: What the team is working on today
+- **Yesterday's Achievements**: Completed work and progress made
+- **Blockers & Recommendations**: Issues requiring leadership attention and suggested actions
+
+Reports use markdown formatting with bold headers for easy scanning and include actionable insights rather than raw team responses.
+
 ## Troubleshooting
 
 ### Bot not responding
 - Check Slack bot token and permissions
 - Verify channel ID is correct
 - Ensure bot is invited to the target channel
+- Confirm bot process is running continuously
 
 ### AI reports not working
 - Verify OpenAI API key is valid
-- Check OpenAI account has sufficient credits
+- Check OpenAI account has sufficient credits ($5 minimum recommended)
 - Review console logs for API errors
+- Test API key with a simple curl request
 
 ### Questions not posting automatically
 - Confirm bot process is running continuously
-- Check timezone configuration
-- Verify scheduling logs in console
+- Check console for scheduling confirmation logs
+- Verify system time and timezone settings
+- Ensure no firewall blocking outbound connections
 
-## License
 
-ISC

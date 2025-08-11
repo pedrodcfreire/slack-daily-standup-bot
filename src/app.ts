@@ -29,17 +29,25 @@ async function generateAIReport(responses: any[]): Promise<string> {
   try {
     const responsesText = responses.map(r => `${r.user}: ${r.message}`).join('\n');
     
-    const prompt = `You are a team lead assistant. Analyze these daily standup responses and create a concise, actionable report divided in 3 topics.
+    const prompt = `You are a team lead assistant. Create a very brief report analyzing the team responses.
 
 Team Responses:
 ${responsesText}
 
-Please provide:
-**1. Today's focus areas**
-**2. Yesterday's achievements**
-**3. Blockers that need attention and any recommendations for the team lead**
+Format the report exactly like this:
 
-Keep it professional but friendly, and highlight urgent items.`;
+**📅 Daily Standup Report - ${new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}**
+
+**1. Today's Focus Areas**
+[Brief 1-line summary of what the team is working on today]
+
+**2. Yesterday's Achievements**  
+[Brief 1-line summary of what was completed yesterday]
+
+**3. Blockers & Recommendations**
+[Brief 1-2 line summary of any issues and recommendations]
+
+Do NOT include the exact team responses. Only provide your analysis. Keep each section to maximum 2 lines. Use **bold** formatting for headers.`;
 
     const response = await axios.post('https://api.openai.com/v1/chat/completions', {
       model: 'gpt-3.5-turbo',
@@ -70,6 +78,7 @@ async function postDailyQuestions(channelId: string) {
   try {
     await app.client.chat.postMessage({
       channel: channelId,
+      text: "🌅 Good morning! Daily standup questions",
       blocks: [
         {
           type: "section",

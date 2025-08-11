@@ -1,136 +1,69 @@
 # AI Prompts Documentation
 
-This document contains all the AI prompts and interactions used during the development of the Slack Daily Standup Bot.
+This document contains the AI prompts and interactions used during the development of the Slack Daily Standup Bot.
 
-## Development Prompts Used
+The bot was developed using AI assistance (Claude) to accelerate development and was used strategically for:
 
-### Initial Project Setup
-- **Prompt**: "How do I get started with building a Slack bot for daily standups?"
-- **AI Tool**: Claude
-- **Purpose**: Understanding project requirements and setup steps
-
-### Code Generation Prompts
-- **Prompt**: "Create a TypeScript Slack bot using Bolt framework that posts daily standup questions"
-- **AI Tool**: Claude  
-- **Purpose**: Generate the main bot application code
-
-# AI Prompts Documentation
-
-This document contains all the key prompts and AI interactions used during the development of the Slack Daily Standup Bot.
-
-## Development Process
-
-The bot was developed using AI assistance (Claude) for:
-- Project structure setup
-- Slack Bot framework implementation  
-- OpenAI API integration
-- TypeScript configuration
-- Error handling and debugging
-
-## Core AI Prompt for Report Generation
-
-### OpenAI Prompt Used in Production
-
-The following prompt is sent to OpenAI GPT-3.5-turbo to generate intelligent standup reports:
-
-```
-You are a team lead assistant. Analyze these daily standup responses and create a concise, actionable report.
-
-Team Responses:
-${responsesText}
-
-Please provide:
-1. Brief progress summary
-2. Today's focus areas
-3. Blockers that need attention
-4. Any recommendations for the team lead
-
-Keep it professional but friendly, and highlight urgent items.
-```
-
-### Prompt Parameters
-- **Model**: `gpt-3.5-turbo`
-- **Max Tokens**: 500
-- **Temperature**: 0.7 (balanced creativity and consistency)
-
-## Development Prompts Used with Claude
-
-### Initial Project Setup
-```
-I need to create a Slack bot for daily standups that:
-1. Posts questions automatically each day
-2. Collects team responses
-3. Generates AI reports for team leaders
-4. Uses TypeScript and integrates with OpenAI
-```
-
-### Code Structure and Implementation
-```
-Help me implement:
-- Slack Bot framework setup using @slack/bolt
-- Environment variable configuration
-- Message handling for team responses
-- OpenAI API integration for intelligent reports
-- Daily scheduling system
-```
-
-### Error Handling and Debugging
-```
-The bot is getting [specific error]. How do I:
-- Debug OpenAI API quota issues
-- Fix TypeScript compilation errors
-- Handle Slack API authentication
-- Test the scheduling functionality
-```
-
-### Architecture and Best Practices
-```
-What's the best way to structure a Slack bot that:
-- Runs continuously in production
-- Handles daily scheduling
-- Integrates multiple APIs (Slack + OpenAI)
-- Manages environment configurations securely
-```
-
-## AI Tools and Assistance Used
-
-### Development Tools
-- **Claude (Anthropic)**: Primary development assistant
-  - Code generation and debugging
-  - Architecture guidance
-  - Documentation creation
-  - Problem-solving support
-
-### Specific AI Contributions
-1. **Initial bot structure** - Slack Bolt framework setup
-2. **OpenAI integration** - API calls and error handling
-3. **Scheduling implementation** - Daily automation logic
-4. **Environment configuration** - Secure token management
-5. **TypeScript setup** - Proper typing and compilation
-6. **Documentation** - README and prompts.md creation
-
-## Prompt Engineering Insights
-
-### Effective Strategies Used
-- **Specific requirements** - Clearly defined what the bot should do
-- **Step-by-step approach** - Breaking complex tasks into smaller parts
-- **Context providing** - Sharing error messages and current code state
-- **Iterative refinement** - Testing and improving based on results
-
-### Key Learning
-- Start with simple solutions (setTimeout vs cron)
-- Understand every piece of generated code
-- Test incrementally rather than building everything at once
-- Document the development process for transparency
-
-## Future Improvements
-
-Potential AI-powered enhancements discussed but not implemented:
-- Sentiment analysis of team responses
-- Trend detection across multiple days
-- Automated blocker escalation
-- Team productivity insights
-- Integration with project management tools
+- Project architecture and structure setup
+- Slack SDK implementation guidance
+- OpenAI API integration patterns
+- TypeScript configuration and best practices
+- Error handling and debugging support
+- Code optimization and refactoring
 
 
 
+## Project Initialization
+
+### Foundation Setup
+**Prompt**: "I need to build a Slack bot for daily standups. What's the recommended project structure and initial setup for a TypeScript Node.js application?"
+**Prompt**: "What are the essential dependencies I need for a Slack bot that will integrate with OpenAI API for generating reports?"
+**Prompt**: "Explain the differences between Slack's Socket Mode and HTTP Webhooks. Which is better for a standup bot?"
+
+### Repository and Version Control
+**Prompt**: "What's the purpose of README.md and prompts.md files in a professional project?"
+**Prompt**: "Guide me through creating a GitHub repository and establishing a proper commit workflow for this project."
+
+
+
+## Core Implementation
+
+### Slack Integration
+**Prompt**: "Create a TypeScript Slack bot that posts daily standup questions. Start with a simple implementation that we can iterate on."
+**Prompt**: "What are the minimum required Slack bot token scopes for posting messages, reading responses, and sending direct messages?"
+**Prompt**: "How do I properly handle Slack events and implement message scheduling in a Node.js environment?"
+
+### Scheduling Implementation
+**Prompt**: "Compare different approaches for implementing daily scheduling in Node.js: setTimeout vs cron packages. What are the pros and cons?"
+**Prompt**: "What are cost-effective alternatives to OpenAI API for text summarization and analysis tasks?"
+
+
+
+## Development Tools and Environment
+
+### Development Setup
+**Prompt**: "What development tools and programs do I need to set up for building and testing a Slack bot locally?"
+**Prompt**: "Explain how to use ngrok for local Slack app development and testing."
+
+
+
+## Debugging and Problem Solving
+
+### Common Issues Resolution
+**Prompt**: "How do I debug and resolve OpenAI API quota exceeded errors in a production environment?"
+**Prompt**: "How can I test the daily scheduling functionality without waiting 24 hours between tests?"
+
+### Error Handling Strategies
+**Prompt**: "Implement comprehensive error handling for Slack API calls, OpenAI API integration, and scheduling failures."
+
+
+
+## Code Quality and Documentation
+
+### Documentation Standards
+**Prompt**: "Generate JSDoc comments for all public methods and classes following TypeScript best practices."
+**Prompt**: "Create a comprehensive README.md that explains installation, configuration, and usage for both developers and end users."
+
+### Code Optimization
+**Prompt**: "Review and optimize the bot code for better performance, error resilience, and maintainability."
+**Prompt**: "Implement proper TypeScript interfaces and types for all Slack and OpenAI API interactions."
