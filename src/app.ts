@@ -1,4 +1,4 @@
-import { App } from '@slack/bolt';
+import { App, LogLevel } from '@slack/bolt';
 import * as dotenv from 'dotenv';
 import axios from 'axios';
 
@@ -22,8 +22,8 @@ const app = new App({
   signingSecret: process.env.SLACK_SIGNING_SECRET,
   socketMode: true,
   appToken: process.env.SLACK_APP_TOKEN,
-  port: 3000
-  logLevel: 'info' // This reduces debug warnings
+  port: 3000,
+  logLevel: LogLevel.INFO,
 });
 
 /**
