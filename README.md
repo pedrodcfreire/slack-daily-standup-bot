@@ -4,7 +4,7 @@ AI-powered Slack bot that automates daily standup meetings and generates intelli
 
 ## Features
 
-- 🤖 **Automated Daily Questions**: Posts standup questions every day at 9:00 AM
+- 🤖 **Automated Daily Questions**: Posts standup questions every day
 - 🧠 **AI-Generated Reports**: Uses OpenAI to create intelligent summaries for team leaders
 - ⏰ **Scheduled Operations**: Automatically runs daily without manual intervention
 - 📊 **Real-time Processing**: Captures team responses and sends immediate reports
@@ -33,14 +33,13 @@ AI-powered Slack bot that automates daily standup meetings and generates intelli
 3. **Create environment file:**
    Create a `.env` file in the project root with the configuration variables shown below.
 
-4. **Configure environment variables** (see Configuration section below)
-
 ## Configuration
 
 Create a `.env` file with the following variables:
 
 ```env
 SLACK_BOT_TOKEN=xoxb-your-bot-token
+SLACK_APP_TOKEN=xapp-your-app-token
 SLACK_SIGNING_SECRET=your-signing-secret
 OPENAI_API_KEY=sk-proj-your-openai-key
 CHANNEL_ID=your-target-channel-id
@@ -56,22 +55,30 @@ NODE_ENV=development
    - Click "Create New App" → "From scratch"
    - Choose your workspace
 
-2. **Configure Bot Token:**
+2. **Enable Socket Mode:**
+   - Go to "Socket Mode" → Toggle "Enable Socket Mode" ON
+   - Click "Generate" to create App-Level Token
+   - Add scope: `connections:write`
+   - Copy token (starts with `xapp-`) to `SLACK_APP_TOKEN`
+
+3. **Configure Bot Token:**
    - Go to "OAuth & Permissions"
-   - Add these scopes:
-     - `chat:write`
-     - `users:read`
-     - `channels:read`
+   - Add these scopes: `chat:write`, `users:read`, `channels:history`
    - Install app to workspace
    - Copy "Bot User OAuth Token" to `SLACK_BOT_TOKEN`
 
-3. **Get Signing Secret:**
+4. **Get Signing Secret:**
    - Go to "Basic Information"
    - Copy "Signing Secret" to `SLACK_SIGNING_SECRET`
 
-4. **Get Channel and User IDs:**
-   - Channel ID: Found in Slack channel URL
-   - User ID: Right-click on team leader → "Copy member ID"
+5. **Configure Event Subscriptions:**
+   - Go to "Event Subscriptions" → Enable Events
+   - Since using Socket Mode, no Request URL needed
+   - Subscribe to: `message.channels`
+
+6. **Get Channel and User IDs:**
+   - Channel ID: Right-click channel → Copy Link → Extract ID from URL
+   - User ID: Right-click team leader → "Copy member ID"
 
 ### Getting OpenAI API Key
 
@@ -94,23 +101,25 @@ npm start
 
 ## How It Works
 
-1. **Daily Scheduling**: Bot automatically posts standup questions at 9:00 AM every day
+1. **Daily Scheduling**: Bot automatically posts standup questions every 24 hours
 2. **Response Capture**: Monitors target channel for team member responses
 3. **AI Analysis**: Sends responses to OpenAI for intelligent summarization
-4. **Report Delivery**: Sends AI-generated report to team leader via DM immediately (in production, this would be batched for end-of-day delivery)
+4. **Report Delivery**: Sends AI-generated report to team leader via DM
 
 ## Architecture
+
+The bot uses Socket Mode for real-time communication with Slack, eliminating the need for webhooks or public URLs.
 
 ```
 ┌─────────────────┐    ┌──────────────┐    ┌─────────────────┐
 │   Slack API     │◄──►│   Node.js    │◄──►│   OpenAI API    │
-│   (Messages)    │    │   Bot App    │    │   (AI Reports)  │
+│   (Socket Mode) │    │   Bot App    │    │   (AI Reports)  │
 └─────────────────┘    └──────────────┘    └─────────────────┘
-        ▲                       ▲                     ▲
-        │               ┌───────────────┐             │
-        └───────────────│   Scheduling  │─────────────┘
-                        │  (setTimeout) │
-                        └───────────────┘
+        ▲                       ▲                     
+        │               ┌───────────────┐             
+        └───────────────│   Scheduling  │             
+                        │  (setInterval)│             
+                        └───────────────┘             
 ```
 
 ## File Structure
@@ -134,26 +143,18 @@ The bot generates structured reports with three main sections:
 - **Yesterday's Achievements**: Completed work and progress made
 - **Blockers & Recommendations**: Issues requiring leadership attention and suggested actions
 
-Reports use markdown formatting with bold headers for easy scanning and include actionable insights rather than raw team responses.
-
 ## Troubleshooting
 
 ### Bot not responding
-- Check Slack bot token and permissions
-- Verify channel ID is correct
-- Ensure bot is invited to the target channel
-- Confirm bot process is running continuously
+- Check all environment variables are set correctly
+- Verify bot is invited to the target channel: `/invite @your-bot-name`
+- Ensure Socket Mode is enabled with correct App Token
+- Confirm `message.channels` event is subscribed
 
 ### AI reports not working
-- Verify OpenAI API key is valid
-- Check OpenAI account has sufficient credits ($5 minimum recommended)
-- Review console logs for API errors
-- Test API key with a simple curl request
+- Verify OpenAI API key is valid and has credits
+- Check console logs for API errors
 
 ### Questions not posting automatically
 - Confirm bot process is running continuously
 - Check console for scheduling confirmation logs
-- Verify system time and timezone settings
-- Ensure no firewall blocking outbound connections
-
-

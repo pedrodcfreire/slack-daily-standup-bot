@@ -44,7 +44,8 @@ The bot was developed using AI assistance (Claude) to accelerate development and
 
 ### Development Setup
 **Prompt**: "What development tools and programs do I need to set up for building and testing a Slack bot locally?"  
-**Prompt**: "Explain how to use ngrok for local Slack app development and testing. Is ngrok needed if I use HTTP mode?"  
+**Prompt**: "Explain how to use ngrok for local Slack app development and testing."
+**Prompt**: "Which one is better for app sharing and development, HTTP Mode or Socket Mode? Why?"
 
 
 ## Debugging and Problem Solving

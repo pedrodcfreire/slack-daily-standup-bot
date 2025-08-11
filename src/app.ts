@@ -6,19 +6,29 @@ import axios from 'axios';
 dotenv.config();
 
 /**
- * Initialize Slack Bolt app with credentials
+ * Interface for standup responses
+ */
+interface StandupResponse {
+  user: string;
+  message: string;
+  timestamp: Date;
+}
+
+/**
+ * Initialize Slack Bolt app with Socket Mode
  */
 const app = new App({
   token: process.env.SLACK_BOT_TOKEN,
   signingSecret: process.env.SLACK_SIGNING_SECRET,
-  socketMode: false,
+  socketMode: true,
+  appToken: process.env.SLACK_APP_TOKEN,
   port: 3000
 });
 
 /**
  * Array to store daily standup responses from team members
  */
-let dailyResponses: any[] = [];
+let dailyResponses: StandupResponse[] = [];
 
 /**
  * Schedules daily standup questions to be posted every 24 hours
@@ -41,7 +51,7 @@ function scheduleDaily() {
  * @param responses - Array of team member responses containing user and message data
  * @returns Promise<string> - Formatted AI report with date, focus areas, achievements, and blockers
  */
-async function generateAIReport(responses: any[]): Promise<string> {
+async function generateAIReport(responses: StandupResponse[]): Promise<string> {
   try {
     const responsesText = responses.map(r => `${r.user}: ${r.message}`).join('\n');
     
@@ -145,14 +155,19 @@ async function sendReportToLeader(report: string, leaderUserId: string) {
  * Event handler for processing team member messages in the configured channel
  * Captures responses, generates AI reports, and sends them to the team leader
  */
-app.message(async ({ message, say }) => {
+app.message(async ({ message, say, client }) => {
   try {
     if ('channel' in message && 'user' in message && 'text' in message) {
       if (message.channel === process.env.CHANNEL_ID) {
+        // Ignore bot messages
+        if (message.subtype === 'bot_message' || ('bot_id' in message && message.bot_id)) {
+          return;
+        }
+
         console.log('📝 New response received!');
         console.log(`Message: ${message.text}`);
         
-        const userInfo = await app.client.users.info({ user: message.user });
+        const userInfo = await client.users.info({ user: message.user });
         const userName = userInfo.user?.real_name || 'Team Member';
         
         dailyResponses.push({
@@ -178,7 +193,7 @@ app.message(async ({ message, say }) => {
 (async () => {
   try {
     await app.start();
-    console.log('⚡️ Bot running on port 3000 with AI integration!');
+    console.log('⚡️ Bot running with Socket Mode and AI integration!');
     console.log('🌐 Ready for deployment...');
     
     scheduleDaily();
