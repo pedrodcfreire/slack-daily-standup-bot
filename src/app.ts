@@ -23,6 +23,7 @@ const app = new App({
   socketMode: true,
   appToken: process.env.SLACK_APP_TOKEN,
   port: 3000
+  logLevel: 'info' // This reduces debug warnings
 });
 
 /**
