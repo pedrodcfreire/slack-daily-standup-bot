@@ -10,6 +10,7 @@ The bot was developed using AI assistance (Claude) to accelerate development and
 - TypeScript configuration and best practices
 - Error handling and debugging support
 - Code optimization and refactoring
+- General questions about programming and different technologies
 
 
 
@@ -43,17 +44,14 @@ The bot was developed using AI assistance (Claude) to accelerate development and
 
 ### Development Setup
 **Prompt**: "What development tools and programs do I need to set up for building and testing a Slack bot locally?"  
-**Prompt**: "Explain how to use ngrok for local Slack app development and testing."  
-
+**Prompt**: "Explain how to use ngrok for local Slack app development and testing. Is ngrok needed if I use HTTP mode?"  
 
 
 ## Debugging and Problem Solving
 
-### Common Issues Resolution
+### Issues Resolution
 **Prompt**: "How do I debug and resolve OpenAI API quota exceeded errors in a production environment?"  
 **Prompt**: "How can I test the daily scheduling functionality without waiting 24 hours between tests?"  
-
-### Error Handling Strategies
 **Prompt**: "Implement comprehensive error handling for Slack API calls, OpenAI API integration, and scheduling failures."  
 
 
