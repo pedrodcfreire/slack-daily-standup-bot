@@ -2,8 +2,12 @@ import { App } from '@slack/bolt';
 import * as dotenv from 'dotenv';
 import axios from 'axios';
 
+// Load environment variables from .env file
 dotenv.config();
 
+/**
+ * Initialize Slack Bolt app with credentials
+ */
 const app = new App({
   token: process.env.SLACK_BOT_TOKEN,
   signingSecret: process.env.SLACK_SIGNING_SECRET,
@@ -11,8 +15,15 @@ const app = new App({
   port: 3000
 });
 
+/**
+ * Array to store daily standup responses from team members
+ */
 let dailyResponses: any[] = [];
 
+/**
+ * Schedules daily standup questions to be posted every 24 hours
+ * Uses setInterval to automatically post questions at regular intervals
+ */
 function scheduleDaily() {
   const interval = 1000 * 60 * 60 * 24; // 24 hours
   
@@ -25,6 +36,11 @@ function scheduleDaily() {
   console.log('📅 Questions will post every 24 hours');
 }
 
+/**
+ * Generates an AI-powered daily standup report from team responses
+ * @param responses - Array of team member responses containing user and message data
+ * @returns Promise<string> - Formatted AI report with date, focus areas, achievements, and blockers
+ */
 async function generateAIReport(responses: any[]): Promise<string> {
   try {
     const responsesText = responses.map(r => `${r.user}: ${r.message}`).join('\n');
@@ -74,6 +90,10 @@ ${responses.map((r, i) => `${i + 1}. **${r.user}**: ${r.message}`).join('\n')}
   }
 }
 
+/**
+ * Posts daily standup questions to the specified Slack channel
+ * @param channelId - Slack channel ID where the questions should be posted
+ */
 async function postDailyQuestions(channelId: string) {
   try {
     await app.client.chat.postMessage({
@@ -95,6 +115,11 @@ async function postDailyQuestions(channelId: string) {
   }
 }
 
+/**
+ * Sends the AI-generated report to the team leader via Slack DM
+ * @param report - The formatted AI report content to send
+ * @param leaderUserId - Slack user ID of the team leader who should receive the report
+ */
 async function sendReportToLeader(report: string, leaderUserId: string) {
   try {
     await app.client.chat.postMessage({
@@ -116,6 +141,10 @@ async function sendReportToLeader(report: string, leaderUserId: string) {
   }
 }
 
+/**
+ * Event handler for processing team member messages in the configured channel
+ * Captures responses, generates AI reports, and sends them to the team leader
+ */
 app.message(async ({ message, say }) => {
   try {
     if ('channel' in message && 'user' in message && 'text' in message) {
@@ -142,6 +171,10 @@ app.message(async ({ message, say }) => {
   }
 });
 
+/**
+ * Initialize and start the Slack bot application
+ * Sets up daily scheduling and posts initial test questions
+ */
 (async () => {
   try {
     await app.start();
